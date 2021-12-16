@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 /// <summary>
 /// A sorted list
 /// </summary>
+[Serializable]
 public class SortedList<T> where T:IComparable
 {
-    List<T> items = new List<T>();
+    [SerializeField] List<T> items = new List<T>();
 
     // used in Add method
-    List<T> tempList = new List<T>();
+    [SerializeField] List<T> tempList = new List<T>();
 	
     #region Constructors
 
@@ -37,7 +37,7 @@ public class SortedList<T> where T:IComparable
     }
 	
     /// <summary>
-    /// Gets the item in the list at the given index
+    /// Gets the item in the array at the given index
     /// This property allows access using [ and ]
     /// </summary>
     /// <param name="index">index of item</param>
@@ -58,6 +58,36 @@ public class SortedList<T> where T:IComparable
     public void Add(T item)
     {
         // add your implementation below
+        int addLocation = 0;
+        // O(n)
+        while ((addLocation < items.Count) && (items[addLocation].CompareTo(item) < 0))
+        {
+            addLocation++;
+        }
+        
+        //Copy items pieces and new item into temp List
+        tempList.Clear(); //Clean tempList
+
+        //Add current elements in the tempList
+        // O(n)
+        for (int i = 0; i < addLocation; i++)
+        {
+            tempList.Add(items[i]);
+        }
+        
+        //Add the new item at the end
+        tempList.Add(item);
+
+        //Add new elements until we reach the end of the items list
+        // O(n)
+        for (int i = addLocation; i < items.Count; i++)
+        {
+            tempList.Add(items[i]);
+        }
+        
+        //Copy temp list back into items
+        items.Clear(); //We clean the items list
+        items.AddRange(tempList); //We add the whole new list in items.
     }
 
     /// <summary>
@@ -67,6 +97,12 @@ public class SortedList<T> where T:IComparable
     public void RemoveAt(int index)
     {
         // add your implementation below
+        // O(1)
+        bool exists = items[index] != null ? true : false;
+        if (!exists)
+            return;
+        
+        items.RemoveAt(index);
     }
 
     /// <summary>
@@ -116,24 +152,5 @@ public class SortedList<T> where T:IComparable
     {
         items.Sort();
     }
-
-    /// <summary>
-    /// Returns the contents of the list as a csv string
-    /// </summary>
-    /// <returns>csv string of list contents</returns>
-    public override string ToString()
-    {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (int i = 0; i < Count; i++)
-        {
-            stringBuilder.Append(items[i]);
-            if (i < Count - 1)
-            {
-                stringBuilder.Append(',');
-            }
-        }
-        return stringBuilder.ToString();
-    }
-
     #endregion
 }
