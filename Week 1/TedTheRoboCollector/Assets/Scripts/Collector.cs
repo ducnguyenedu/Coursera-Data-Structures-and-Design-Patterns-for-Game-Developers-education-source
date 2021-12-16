@@ -1,8 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.Events;
 
 /// <summary>
 /// A collecting game object
@@ -12,19 +10,17 @@ public class Collector : MonoBehaviour
 	#region Fields
 
     // targeting support
-    [SerializeField] SortedList<Target> targets = new SortedList<Target>();
+    SortedList<Target> targets = new SortedList<Target>();
     Target targetPickup = null;
 
     // movement support
-	float BaseImpulseForceMagnitude = 2.0f;
+	const float BaseImpulseForceMagnitude = 2.0f;
     const float ImpulseForceIncrement = 0.3f;
-	
+
 	// saved for efficiency
     Rigidbody2D rb2d;
 
     #endregion
-    
-    HUDAddPoints hudAddPoints=new HUDAddPoints();
 
     #region Methods
 
@@ -44,13 +40,9 @@ public class Collector : MonoBehaviour
 		rb2d = GetComponent<Rigidbody2D>();
 
         // add as listener for pickup spawned event
-        EventManager.AddListener_Pickup(HandleTarget);
-        EventManager.AddInvoker_AddPoints(this);
-        // EventManager.AddListener(PrintMsg);
+        EventManager.AddListener(HandlePickupSpawnedEvent);
 	}
 
-   
-    
     /// <summary>
     /// Called when another object is within a trigger collider
     /// attached to this object
@@ -59,92 +51,160 @@ public class Collector : MonoBehaviour
     void OnTriggerStay2D(Collider2D other)
     {
         // only respond if the collision is with the target pickup
-		if (other.gameObject == targetPickup.GameObject)
-		{
-			hudAddPoints.Invoke(1);
-
-			BaseImpulseForceMagnitude += ImpulseForceIncrement;
-	        // remove collected pickup from list of targets and game
-            int targetPickupIndex = targets.IndexOf(targetPickup)!= -1 ? targets.IndexOf(targetPickup) : targets.Count - 1;
+        if (other.gameObject == targetPickup.GameObject)
+        {
+            // remove collected pickup from list of targets and game
+            int targetPickupIndex = targets.IndexOf(targetPickup);
             GameObject deadTarget = targets[targetPickupIndex].GameObject;
             targets.RemoveAt(targetPickupIndex);
             Destroy(deadTarget);
 
-			// go to next target if there is one
-			rb2d.velocity=Vector2.zero;
-
-			if (targets.Count > 0)
-			{
-				for (int i = 0; i < targets.Count; i++)
-				{
-					targets[i].UpdateDistance(transform.position);
-				}
-				targets.Sort();
-				SetTarget(targets[targets.Count-1]);
-			}
-			else
-			{
-				targetPickup = null;
-			}
-        }
+            // go to next target if there is one
+            rb2d.velocity = Vector2.zero;
+            if (targets.Count > 0)
+            {
+                for (int i = 0; i < targets.Count; i++)
+                {
+                    targets[i].UpdateDistance(transform.position);
+                }
+                targets.Sort();
+                SetTarget(targets[targets.Count - 1]);
+            }
+            else
+            {
+                targetPickup = null;
+            }
+		}
 	}
 
-    void HandleTarget(GameObject obj)
+    /// <summary>
+    /// Handles the pickup spawned event
+    /// </summary>
+    /// <param name="pickup">pickup that was spawned</param>
+    void HandlePickupSpawnedEvent(GameObject pickup)
     {
-	    //Adds new target to the list of targets
-	    targets.Add(new Target(obj,this.transform.position));
-	    // targets.Sort();
+        // add new pickup to list of targets
+        targets.Add(new Target(pickup, transform.position));
 
-	    float currentDistance = 0;
-
-	    if (targetPickup != null)
-	    {
-		    currentDistance = Vector3.Distance(targetPickup.GameObject.transform.position, transform.position);
-	    }
-	    else
-	    {
-		    currentDistance = float.MaxValue;
-	    }
-
-	    if (targets[targets.Count - 1].Distance < currentDistance)
-	    {
-		    SetTarget(targets[targets.Count-1]);
-	    }
+        // change target as appropriate
+        float targetPickupDistance;
+        if (targetPickup != null)
+        {
+            targetPickupDistance = Vector3.Distance(
+                targetPickup.GameObject.transform.position, transform.position);
+        }
+        else
+        {
+            targetPickupDistance = float.MaxValue;
+        }
+        if (targets[targets.Count - 1].Distance < targetPickupDistance)
+        {
+            SetTarget(targets[targets.Count - 1]);
+        }
     }
-    
-	/// <summary>
-	/// Sets the target pickup to the provided pickup
-	/// </summary>
-	/// <param name="pickup">Pickup.</param>
-	void SetTarget(Target _pickup)
-	{
-		targetPickup = _pickup;
-		GoToTargetPickup();
-	}
 
-	/// <summary>
-	/// Starts the teddy bear moving toward the target pickup
-	/// </summary>
-	void GoToTargetPickup()
+    /// <summary>
+    /// Sets the target pickup to the provided pickup
+    /// </summary>
+    /// <param name="pickup">Pickup.</param>
+    void SetTarget(Target pickup)
+    {
+        targetPickup = pickup;
+        GoToTargetPickup();
+    }
+
+    /// <summary>
+    /// Starts the collector moving toward the target pickup
+    /// </summary>
+    void GoToTargetPickup()
     {
         // calculate direction to target pickup and start moving toward it
-		Vector2 direction = new Vector2(
-			targetPickup.GameObject.transform.position.x - transform.position.x,
-			targetPickup.GameObject.transform.position.y - transform.position.y);
-		direction.Normalize();
-		rb2d.velocity = Vector2.zero;
-		rb2d.AddForce(direction * BaseImpulseForceMagnitude, 
-			ForceMode2D.Impulse);
-	}
-	
-	#endregion
-	
+        Vector2 direction = new Vector2(
+            targetPickup.GameObject.transform.position.x - transform.position.x,
+            targetPickup.GameObject.transform.position.y - transform.position.y);
+        direction.Normalize();
+        rb2d.velocity = Vector2.zero;
+        float impulseForce = BaseImpulseForceMagnitude +
+            ImpulseForceIncrement * targets.Count;
+        rb2d.AddForce(direction * impulseForce, 
+            ForceMode2D.Impulse);
+    }
+
+    /*
 	/// <summary>
-	/// Adds the given listener for the pickup spawned event
+	/// Updates the pickup currently targeted for collection.
+	/// If the provided pickup is closer than the currently
+	/// targeted pickup, the provided pickup is set as the
+	/// new target. Otherwise, the targeted pickup isn't
+	/// changed.
 	/// </summary>
-	/// <param name="listener">listener</param>
-	public void AddListener_AddPoints(UnityAction<int> listener)
-	{
-		hudAddPoints.AddListener(listener);
+	/// <param name="pickup">pickup</param>
+	public void UpdateTarget(GameObject pickup)
+    {
+		if (targetPickup == null)
+        {
+			SetTarget(pickup);
+		}
+        else
+        {
+			float targetDistance = GetDistance(targetPickup);
+			if (GetDistance(pickup) < targetDistance)
+            {
+				SetTarget(pickup);
+			}
+		} 
 	}
+
+
+
+
+
+
+	/// <summary>
+	/// Gets the pickup in the scene that's closest to the teddy bear
+	/// If there are no pickups in the scene, returns null
+	/// </summary>
+	/// <returns>closest pickup</returns>
+	GameObject GetClosestPickup()
+    {
+        // initial setup
+		List<GameObject> pickups = tedTheCollector.Pickups;
+		GameObject closestPickup;
+		float closestDistance;
+		if (pickups.Count == 0)
+        {
+			return null;
+		}
+        else
+        {
+			closestPickup = pickups[0];
+			closestDistance = GetDistance(closestPickup);
+		}
+
+		// find and return closest pickup
+		foreach (GameObject pickup in pickups)
+        {
+			float distance = GetDistance(pickup);
+			if (distance < closestDistance)
+            {
+				closestPickup = pickup;
+				closestDistance = distance;
+			}
+		}
+		return closestPickup;
+	}
+
+	/// <summary>
+	/// Gets the distance between the teddy bear and the 
+	/// provided pickup
+	/// </summary>
+	/// <returns>distance</returns>
+	/// <param name="pickup">pickup</param>
+	float GetDistance(GameObject pickup)
+    {
+		return Vector3.Distance(transform.position, pickup.transform.position);
+	}
+    */
+
+	#endregion
 }

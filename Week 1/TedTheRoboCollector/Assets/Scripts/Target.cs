@@ -38,14 +38,11 @@ public class Target : IComparable
     /// Gets the target game object
     /// </summary>
     /// <value>target game object</value>
-    
     public GameObject GameObject
     {
-        get => gameObject;
-        set => gameObject = value;
+        get { return gameObject; }
     }
-    
-	
+
     /// <summary>
     /// Gets the distance for the target
     /// </summary>
@@ -54,7 +51,7 @@ public class Target : IComparable
     {
         get { return distance; }
     }
-	
+
     #endregion
 
     #region Public methods
@@ -80,32 +77,37 @@ public class Target : IComparable
     /// <param name="obj">object to compare to</param>
     public int CompareTo(object obj)
     {
-        // replace the code below with your implementation
-        // return 0;
-        
-        //Always greater than null
-        if (obj == null) return 1;
-        
-        //Check object type
-        Target otherTarget = obj as Target;
+        // this instance is greater than a null object
+        if (obj == null)
+        {
+            return 1;
+        }
 
+        // check for same object type
+        Target otherTarget = obj as Target;
         if (otherTarget != null)
         {
-            // if (distance > otherTarget.Distance)
-            if (distance < otherTarget.Distance)
-                return 1;
-            else if (distance == otherTarget.Distance)
-                return 0;
-            else
+            // return relative order for descending order sort
+            if (otherTarget.distance < distance)
             {
                 return -1;
             }
+            else if (otherTarget.distance == distance)
+            {
+                return 0;
+            }
+            else
+            {
+                return 1;
+            }
         }
         else
-            throw new ArgumentException("Object is near");
-
+        {
+            // comparing to wrong object type
+            throw new ArgumentException("Object is not a Target");
+        }
     }
-	
+
     /// <summary>
     /// Converts the target to a string
     /// </summary>
@@ -114,6 +116,6 @@ public class Target : IComparable
     {
         return "[Target: Distance = " + distance + "]";
     }
-	
+
     #endregion
 }

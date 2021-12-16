@@ -6,14 +6,13 @@ using UnityEngine;
 /// <summary>
 /// A sorted list
 /// </summary>
-[Serializable]
 public class SortedList<T> where T:IComparable
 {
-    [SerializeField] List<T> items = new List<T>();
+    List<T> items= new List<T>();
 
     // used in Add method
-    [SerializeField] List<T> tempList = new List<T>();
-	
+    List<T> tempList= new List<T>();
+
     #region Constructors
 
     /// <summary>
@@ -35,7 +34,7 @@ public class SortedList<T> where T:IComparable
     {
         get { return items.Count; }
     }
-	
+
     /// <summary>
     /// Gets the item in the array at the given index
     /// This property allows access using [ and ]
@@ -57,37 +56,29 @@ public class SortedList<T> where T:IComparable
     /// <param name="item">item</param>
     public void Add(T item)
     {
-        // add your implementation below
+        // find location at which to add the item
         int addLocation = 0;
-        // O(n)
-        while ((addLocation < items.Count) && (items[addLocation].CompareTo(item) < 0))
+        while ((addLocation < items.Count) &&
+            (items[addLocation].CompareTo(item) < 0))
         {
             addLocation++;
         }
-        
-        //Copy items pieces and new item into temp List
-        tempList.Clear(); //Clean tempList
 
-        //Add current elements in the tempList
-        // O(n)
+        // copy items pieces and new item into temp list
+        tempList.Clear();
         for (int i = 0; i < addLocation; i++)
         {
             tempList.Add(items[i]);
         }
-        
-        //Add the new item at the end
         tempList.Add(item);
-
-        //Add new elements until we reach the end of the items list
-        // O(n)
         for (int i = addLocation; i < items.Count; i++)
         {
             tempList.Add(items[i]);
         }
-        
-        //Copy temp list back into items
-        items.Clear(); //We clean the items list
-        items.AddRange(tempList); //We add the whole new list in items.
+
+        // copy temp list back into items
+        items.Clear();
+        items.AddRange(tempList);
     }
 
     /// <summary>
@@ -96,12 +87,6 @@ public class SortedList<T> where T:IComparable
     /// <param name="index">index</param>
     public void RemoveAt(int index)
     {
-        // add your implementation below
-        // O(1)
-        bool exists = items[index] != null ? true : false;
-        if (!exists)
-            return;
-        
         items.RemoveAt(index);
     }
 
@@ -152,5 +137,6 @@ public class SortedList<T> where T:IComparable
     {
         items.Sort();
     }
+
     #endregion
 }

@@ -16,6 +16,8 @@ public class PickupSpawner : MonoBehaviour
     const float SpawnDelay = 0.3f;
 	Timer spawnTimer;
     const int MaxNumPickups = 20;
+    const int TotalNumPickups = 50;
+    int numPickupsSpawned = 0;
 
 	// spawn location support
     Vector3 location = Vector3.zero;
@@ -35,12 +37,9 @@ public class PickupSpawner : MonoBehaviour
 	const int BaseHeight = 600;
 	const int BaseBorderSize = 100;
 
-	private int counter = 0;
-	
     // events invoked by the class
     PickupSpawnedEvent pickupSpawnedEvent = new PickupSpawnedEvent();
-    
-    
+
     /// <summary>
     /// Use this for initialization
     /// </summary>
@@ -77,8 +76,8 @@ public class PickupSpawner : MonoBehaviour
         spawnTimer.Duration = SpawnDelay;
         spawnTimer.Run();
 
-		// add as invoker for pickup spawned event
-		EventManager.AddInvoker_Pickup(this);
+        // add as invoker of pickup spawned event
+        EventManager.AddInvoker(this);
 	}
 
 	/// <summary>
@@ -87,19 +86,23 @@ public class PickupSpawner : MonoBehaviour
 	void HandleSpawnTimerFinishedEvent()
     {
 		// only spawn a pickup if below max number
-		if (GameObject.FindGameObjectsWithTag("Pickup").Length < MaxNumPickups && counter<50)
+		if (GameObject.FindGameObjectsWithTag("Pickup").Length < MaxNumPickups)
         {
 			SpawnPickup();
 		}
-        spawnTimer.Run();
+
+        // don't start the timer if we've spawned all the pickups
+        if (numPickupsSpawned < TotalNumPickups)
+        {
+            spawnTimer.Run();
+        }
 	}
 
 	/// <summary>
 	/// Spawns a new pickup at a random location
 	/// </summary>
 	void SpawnPickup()
-	{
-		counter++;
+    {		
 		// generate random location and calculate pickup collision rectangle
 		location.x = Random.Range(minSpawnX, maxSpawnX);
 		location.y = Random.Range(minSpawnY, maxSpawnY);
@@ -124,6 +127,9 @@ public class PickupSpawner : MonoBehaviour
             GameObject pickup = Instantiate<GameObject>(prefabPickup,
                                     location, Quaternion.identity);
             pickupSpawnedEvent.Invoke(pickup);
+
+            // increment total pickups count
+            numPickupsSpawned++;
 		}
 	}
 
@@ -143,7 +149,7 @@ public class PickupSpawner : MonoBehaviour
     /// Adds the given listener for the pickup spawned event
     /// </summary>
     /// <param name="listener">listener</param>
-    public void AddListener_Pickup(UnityAction<GameObject> listener)
+    public void AddListener(UnityAction<GameObject> listener)
     {
         pickupSpawnedEvent.AddListener(listener);
     }
