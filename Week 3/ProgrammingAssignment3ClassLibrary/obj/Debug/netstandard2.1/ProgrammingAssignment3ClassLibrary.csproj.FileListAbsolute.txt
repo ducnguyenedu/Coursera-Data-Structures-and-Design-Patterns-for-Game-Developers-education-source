@@ -1,0 +1,3 @@
+D:\Dropbox\Coursera C# Unity\4 Dat Struc Des Patt\Module 3 S Q & T\Programming Assignment 3\autograder solution\ProgrammingAssignment3ClassLibrary\obj\Debug\netstandard2.1\ProgrammingAssignment3ClassLibrary.AssemblyInfoInputs.cache
+D:\Dropbox\Coursera C# Unity\4 Dat Struc Des Patt\Module 3 S Q & T\Programming Assignment 3\autograder solution\ProgrammingAssignment3ClassLibrary\obj\Debug\netstandard2.1\ProgrammingAssignment3ClassLibrary.AssemblyInfo.cs
+D:\Dropbox\Coursera C# Unity\4 Dat Struc Des Patt\Module 3 S Q & T\Programming Assignment 3\autograder solution\ProgrammingAssignment3ClassLibrary\obj\Debug\netstandard2.1\ProgrammingAssignment3ClassLibrary.csproj.CoreCompileInputs.cache
