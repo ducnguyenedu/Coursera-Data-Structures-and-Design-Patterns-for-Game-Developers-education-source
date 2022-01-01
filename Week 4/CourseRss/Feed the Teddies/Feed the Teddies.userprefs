@@ -1,0 +1,14 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\util\FrenchFriesPool.cs">
+    <Files>
+      <File FileName="Assets\scripts\gameplay\FrenchFries.cs" Line="85" Column="4" />
+      <File FileName="Assets\scripts\gameplay\Burger.cs" Line="121" Column="67" />
+      <File FileName="Assets\scripts\util\FrenchFriesPool.cs" Line="58" Column="9" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

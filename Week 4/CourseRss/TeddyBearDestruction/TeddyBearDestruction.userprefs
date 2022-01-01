@@ -1,0 +1,20 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\AnimatedTeddyBear.cs">
+    <Files>
+      <File FileName="Assets\scripts\AnimatedTeddyBear.cs" Line="12" Column="12" />
+      <File FileName="Assets\scripts\BurningTeddyBear.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\DisappearingTeddyBear.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\ExplodingTeddyBear.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Explosion.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\TeddyBear.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\TeddyBearDestruction.cs" Line="26" Column="2" />
+      <File FileName="Assets\scripts\TeddyBearSpawner.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\Timer.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

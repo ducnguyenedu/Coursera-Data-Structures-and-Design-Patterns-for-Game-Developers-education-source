@@ -1,0 +1,19 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\scripts\gameplay\OhShmup.cs">
+    <Files>
+      <File FileName="Assets\scripts\gameplay\EnemySpawner.cs" Line="49" Column="27" />
+      <File FileName="Assets\scripts\gameplay\Ship.cs" Line="133" Column="1" />
+      <File FileName="Assets\scripts\GameConstants.cs" Line="27" Column="51" />
+      <File FileName="Assets\scripts\gameplay\Enemy.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\util\ObjectPool.cs" Line="1" Column="1" />
+      <File FileName="Assets\scripts\gameplay\Bullet.cs" Line="69" Column="49" />
+      <File FileName="Assets\scripts\gameplay\HUD.cs" Line="28" Column="58" />
+      <File FileName="Assets\scripts\gameplay\OhShmup.cs" Line="26" Column="24" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
